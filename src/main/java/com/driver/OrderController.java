@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class OrderController {
 
 
+     Repository repository=new Repository();
     @PostMapping("/add-order")
     public ResponseEntity<String> addOrder(@RequestBody Order order){
 
@@ -44,7 +45,7 @@ public class OrderController {
 
         Order order= null;
         //order should be returned with an orderId.
-
+        order=repository.getOrderById(orderId);
         return new ResponseEntity<>(order, HttpStatus.CREATED);
     }
 
@@ -54,7 +55,7 @@ public class OrderController {
         DeliveryPartner deliveryPartner = null;
 
         //deliveryPartner should contain the value given by partnerId
-
+         deliveryPartner=repository.getPartnerById(partnerId);
         return new ResponseEntity<>(deliveryPartner, HttpStatus.CREATED);
     }
 
@@ -62,7 +63,7 @@ public class OrderController {
     public ResponseEntity<Integer> getOrderCountByPartnerId(@PathVariable String partnerId){
 
         Integer orderCount = 0;
-
+        orderCount=repository.getOrderCountByPartnerId(partnerId);
         //orderCount should denote the orders given by a partner-id
 
         return new ResponseEntity<>(orderCount, HttpStatus.CREATED);
@@ -71,7 +72,7 @@ public class OrderController {
     @GetMapping("/get-orders-by-partner-id/{partnerId}")
     public ResponseEntity<List<String>> getOrdersByPartnerId(@PathVariable String partnerId){
         List<String> orders = null;
-
+            orders=repository.getOrdersByPartnerId(partnerId);
         //orders should contain a list of orders by PartnerId
 
         return new ResponseEntity<>(orders, HttpStatus.CREATED);
@@ -80,7 +81,7 @@ public class OrderController {
     @GetMapping("/get-all-orders")
     public ResponseEntity<List<String>> getAllOrders(){
         List<String> orders = null;
-
+        orders=repository.getAllOrders();
         //Get all orders
         return new ResponseEntity<>(orders, HttpStatus.CREATED);
     }
@@ -88,7 +89,7 @@ public class OrderController {
     @GetMapping("/get-count-of-unassigned-orders")
     public ResponseEntity<Integer> getCountOfUnassignedOrders(){
         Integer countOfOrders = 0;
-
+         countOfOrders=repository. getCountOfUnassignedOrders();
         //Count of orders that have not been assigned to any DeliveryPartner
 
         return new ResponseEntity<>(countOfOrders, HttpStatus.CREATED);
@@ -98,7 +99,7 @@ public class OrderController {
     public ResponseEntity<Integer> getOrdersLeftAfterGivenTimeByPartnerId(@PathVariable String time, @PathVariable String partnerId){
 
         Integer countOfOrders = 0;
-
+        countOfOrders=repository.getOrdersLeftAfterGivenTimeByPartnerId(time,partnerId);
         //countOfOrders that are left after a particular time of a DeliveryPartner
 
         return new ResponseEntity<>(countOfOrders, HttpStatus.CREATED);
@@ -107,7 +108,7 @@ public class OrderController {
     @GetMapping("/get-last-delivery-time/{partnerId}")
     public ResponseEntity<String> getLastDeliveryTimeByPartnerId(@PathVariable String partnerId){
         String time = null;
-
+         time=repository.getLastDeliveryTimeByPartnerId(partnerId);
         //Return the time when that partnerId will deliver his last delivery order.
 
         return new ResponseEntity<>(time, HttpStatus.CREATED);
@@ -118,6 +119,7 @@ public class OrderController {
 
         //Delete the partnerId
         //And push all his assigned orders to unassigned orders.
+        repository.deletePartnerById(partnerId);
 
         return new ResponseEntity<>(partnerId + " removed successfully", HttpStatus.CREATED);
     }
@@ -127,7 +129,7 @@ public class OrderController {
 
         //Delete an order and also
         // remove it from the assigned order of that partnerId
-
+       repository.deleteOrderById(orderId);
         return new ResponseEntity<>(orderId + " removed successfully", HttpStatus.CREATED);
     }
 }
